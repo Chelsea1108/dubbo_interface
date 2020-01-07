@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+     http://www.springframework.org/schema/context
+     https://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="com.magic.gmall.service.impl"></context:component-scan>
+
+
+    <!--    1,指定当前服务/应用的名字（同样的服务名字相同，不要和别的相同）-->
+    <dubbo:application name="order_service_consumer"></dubbo:application>
+
+    <!--    2.指定注册中心的位置-->
+    <dubbo:registry protocol="zookeeper" address="127.0.0.1:2181" ></dubbo:registry>
+
+<!--    什么需要调用的远程服务的接口-->
+    <dubbo:reference interface="com.magic.gmall.service.UserService" stub="com.magic.gmall.service.impl.UserServiceStub"
+                     check="false" timeout="2000" retries="3" id="userService" version="2.0.0">
+        <dubbo:method name="getUserAddressList" timeout="5000"></dubbo:method>
+    </dubbo:reference>
+    <dubbo:consumer check="false" timeout="3000"></dubbo:consumer>
+
+<!--    监控中心 两种配置-->
+<!--    自动发现-->
+    <dubbo:monitor protocol="registry" ></dubbo:monitor>
+<!--    指定地址-->
+<!--    <dubbo:monitor address="127.0.0.1:7070"></dubbo:monitor>-->
+
+
+
+
+</beans>
